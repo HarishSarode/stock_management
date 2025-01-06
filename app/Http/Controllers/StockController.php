@@ -62,4 +62,8 @@ class StockController extends Controller
             return back()->with('error', 'Something went wrong!');
         }
     }
+
+    public function showForm() {
+        return view('admin.bulkentry');
+    }
 }

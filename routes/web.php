@@ -26,3 +26,4 @@ Route::get('dashboard', function () {
 });
 Route::get('/stocks/list', [StockController::class, 'list'])->name('stock.list')->middleware('auth');
 Route::get('/stocks/delete/{id}', [StockController::class, 'delete'])->name('stock.delete')->middleware('auth');
+Route::get('/stocks/bulk-entry', [StockController::class, 'showForm'])->name('stock.bulk.form')->middleware('auth');

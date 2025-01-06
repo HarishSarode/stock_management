@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
-    public function login(Request $request) {
+    public static function login(Request $request) {
         try {
             if (empty($request->email)) {
                 return response()->json([
@@ -28,6 +28,7 @@ class LoginController extends Controller
 
             if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 $user = Auth::user();
+                $user->tokens()->delete();
                 $token = $user->createToken('bearer')->plainTextToken;
 
                 return response()->json([
@@ -54,7 +55,7 @@ class LoginController extends Controller
         }
     }
 
-    public function logout(Request $request) {
+    public static function logout(Request $request) {
         try {
             if(empty($request->id)){
                 return response()->json([
@@ -64,7 +65,8 @@ class LoginController extends Controller
                 ]);
             }
             $user = User::where('id', $request->id)->first();
-            $user->tokens()->delete();
+            $request->user()->currentAccessToken()->delete();
+            // $user->tokens()->delete();
             return response()->json([
                 'status' => 200,
                 'success' => true,

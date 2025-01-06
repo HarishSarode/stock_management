@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class StockController extends Controller
 {
-    public function list(Request $request) {
+    public static function list(Request $request) {
         try {
             $limit = $request->limit ?? 10;
             $offset = $request->offset ?? 0;
@@ -29,7 +29,7 @@ class StockController extends Controller
         }
     }
 
-    public function delete($id) {
+    public static function delete($id) {
         try {
             $stocks = StockData::where('id', $id)->first();
             if (!$stocks) {
@@ -53,5 +53,16 @@ class StockController extends Controller
                 'message' => 'Something went wrong!'
             ]);
         }
+    }
+
+    // Handle the bulk entry submission
+    public function storeBulk(Request $request)
+    {
+        $data = $request->input('stocks');  // This will be an array of stock data
+
+        // Insert multiple records at once
+        Stock::insert($data);
+
+        return response()->json(['message' => 'Bulk entry successful!']);
     }
 }
